@@ -1,0 +1,97 @@
+#include <iostream>
+
+using namespace std;
+
+void print_board(char **board,int x,int y)
+{
+    for(int i=0;i<x;i++)
+    {
+        for(int j=0;j<y;j++)
+        {
+            cout<<board[i][j];
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
+struct snake_t
+{
+    unsigned int tail_row;
+    unsigned int tail_col;
+    unsigned int head_row;
+    unsigned int head_col;
+    bool live;
+};
+
+struct game_state_t_
+{
+    unsigned int num_rows;
+    char** board;
+    unsigned int num_snakes;
+    snake_t* snakes;
+
+};
+
+game_state_t_* create_default_state()
+{
+    snake_t mysnake;
+    mysnake.tail_row=2;
+    mysnake.tail_col=2;
+    mysnake.head_row=2;
+    mysnake.head_col=4;
+    mysnake.live=true;
+
+    game_state_t_* newgame=new game_state_t_[1];
+    newgame->num_rows=18;
+    newgame->board=new char*[newgame->num_rows];
+    for(int i=0;i<newgame->num_rows;i++)
+    {
+        newgame->board[i]=new char[20];
+    }
+    newgame->num_snakes=1;
+    newgame->snakes=new snake_t[newgame->num_snakes];
+    newgame->snakes[0]=mysnake;
+
+    for(int i=0;i<newgame->num_rows;i++)
+    {
+        for(int j=0;j<20;j++)
+        {
+            if(i==0 || i==newgame->num_rows-1 || j==0 || j==20-1)
+            {
+                newgame->board[i][j]='#';
+            }
+            else if(i==newgame->snakes[0].tail_row && j==newgame->snakes[0].tail_col)
+            {
+                 newgame->board[i][j]='d';
+            }
+            else if(i==newgame->snakes[0].head_row && j==newgame->snakes[0].head_col)
+            {
+                 newgame->board[i][j]='D';
+            }
+            else if(i==newgame->snakes[0].head_row && j==newgame->snakes[0].head_col-1)
+            {
+                 newgame->board[i][j]='>';
+            }
+            else
+            {
+                newgame->board[i][j]=' ';
+            }
+        }
+    }
+    newgame->board[2][9]='*';
+
+    return newgame;
+}
+void free_state()
+{
+    
+}
+
+int main()
+{
+    game_state_t_* game;
+    game=create_default_state();
+    print_board(game->board,18,20);
+    return 0;
+}
